@@ -1,0 +1,85 @@
+import customtkinter
+
+
+class App(customtkinter.CTk):
+    """Класс для отрисовки программы"""
+
+    def __init__(self):
+        super().__init__()
+
+        self.title("Account Management")
+        self.resizable(True, True)
+        customtkinter.set_appearance_mode("dark")
+
+        self.top_label = customtkinter.CTkLabel(self, text="Account and Group Management",
+                                                font=("Times New Roman", 22, "bold"), text_color="gray")
+        self.top_label.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+
+        # Первая рамка, для добавления пользователей в группу
+        self.main_frame = customtkinter.CTkFrame(self)
+        self.main_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        # CTkTextbox располагается справа, для вывода информации выполенных действий
+        self.textbox = customtkinter.CTkTextbox(self, activate_scrollbars=True, state="disabled", width=250)
+        self.textbox.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+
+        # Рамка, где будет добавляться группа
+        self.frame_add_group = customtkinter.CTkFrame(self.main_frame)
+        self.frame_add_group.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.entry_group = customtkinter.CTkEntry(self.frame_add_group, placeholder_text="Enter the group", width=250)
+        self.entry_group.grid(row=0, column=0, padx=10, pady=10)
+
+        self.button_add_group = customtkinter.CTkButton(self.frame_add_group, text="Add group", text_color="black",
+                                                        font=("Times New Roman", 14, "bold"))
+        self.button_add_group.grid(row=0, column=1, padx=10, pady=10)
+
+        self.label_custom_text = customtkinter.CTkLabel(self.frame_add_group, text="")
+        self.label_custom_text.grid(row=1, column=0, columnspan=2, padx=10, pady=10, sticky="w")
+
+        self.button_delete_group = customtkinter.CTkButton(self.frame_add_group, text="Delete group",
+                                                           text_color="black", font=("Times New Roman", 14, "bold"))
+        self.button_delete_group.grid(row=1, column=1, padx=10, pady=10, sticky="e")
+
+        # Рамка, где будут добавляться пользователи
+        self.frame_add_user = customtkinter.CTkFrame(self.main_frame)
+        self.frame_add_user.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.textbox_users = customtkinter.CTkTextbox(self.frame_add_user, activate_scrollbars=True, width=250,
+                                                      height=100)
+        self.textbox_users.grid(row=0, column=0, padx=10, pady=10, rowspan=2, sticky="nsew")
+
+        self.button_add_users = customtkinter.CTkButton(self.frame_add_user, text="Add users", text_color="black",
+                                                        font=("Times New Roman", 14, "bold"))
+        self.button_add_users.grid(row=0, column=1, padx=10, pady=10, sticky="e")
+
+        self.button_delete_users = customtkinter.CTkButton(self.frame_add_user, text="Delete users", text_color="black",
+                                                           font=("Times New Roman", 14, "bold"))
+        self.button_delete_users.grid(row=1, column=1, padx=10, pady=10, sticky="e")
+
+        # Рамка для добавления или удаления пользователей, выбранной группы
+        self.frame_apply = customtkinter.CTkFrame(self.main_frame)
+        self.frame_apply.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.label_add_users = customtkinter.CTkLabel(self.frame_apply, text="Add users to a group",
+                                                      text_color="grey", font=("Times New Roman", 16, "bold"),
+                                                      width=250)
+        self.label_add_users.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+        self.button_add_users = customtkinter.CTkButton(self.frame_apply, text="Add", text_color="black",
+                                                        font=("Times New Roman", 14, "bold"))
+        self.button_add_users.grid(row=0, column=1, padx=10, pady=10)
+
+        self.label_dell_users = customtkinter.CTkLabel(self.frame_apply, text="Remove users from a group",
+                                                       text_color="grey", font=("Times New Roman", 16, "bold"),
+                                                       width=250)
+        self.label_dell_users.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+
+        self.button_dell_users = customtkinter.CTkButton(self.frame_apply, text="Delete", text_color="black",
+                                                         font=("Times New Roman", 14, "bold"))
+        self.button_dell_users.grid(row=1, column=1, padx=10, pady=10)
+
+
+if __name__ == '__main__':
+    app = App()
+    app.mainloop()
