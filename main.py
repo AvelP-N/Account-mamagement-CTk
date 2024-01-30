@@ -67,15 +67,15 @@ class App(customtkinter.CTk, PowerShellCommand):
                                                 font=("Times New Roman", 22, "bold"), text_color="gray")
         self.top_label.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
 
-        # Первая рамка, для добавления пользователей в группу
+        # The first frame to add users to the group
         self.main_frame = customtkinter.CTkFrame(self)
         self.main_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
-        # CTkTextbox располагается справа, для вывода информации выполненных действий
+        # CTkTextbox it is located on the right to display information about the actions performed
         self.textbox = customtkinter.CTkTextbox(self, activate_scrollbars=True, width=380, text_color="green")
         self.textbox.grid(row=1, column=1, padx=(0, 10), pady=10, sticky="nsew")
 
-        # Рамка, где будет добавляться группа
+        # The frame where the group will be added
         self.frame_add_group = customtkinter.CTkFrame(self.main_frame)
         self.frame_add_group.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -97,7 +97,7 @@ class App(customtkinter.CTk, PowerShellCommand):
                                                            command=self.delete_group)
         self.button_delete_group.grid(row=1, column=1, padx=10, pady=10, sticky="e")
 
-        # Рамка, где будут добавляться пользователи
+        # The frame where users will be added
         self.frame_add_user = customtkinter.CTkFrame(self.main_frame)
         self.frame_add_user.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -117,7 +117,7 @@ class App(customtkinter.CTk, PowerShellCommand):
                                                            command=self.delete_users)
         self.button_delete_users.grid(row=1, column=1, padx=10, pady=10, sticky="e")
 
-        # Рамка для добавления или удаления пользователей, выбранной группы
+        # A frame for adding or removing users, a selected group
         self.frame_apply = customtkinter.CTkFrame(self.main_frame)
         self.frame_apply.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
 
