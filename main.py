@@ -1,6 +1,7 @@
 import re
 import subprocess
 import tkinter as tk
+from threading import Thread
 import customtkinter
 
 
@@ -59,7 +60,7 @@ class App(customtkinter.CTk, PowerShellCommand):
         self.group = None
         self.users = []
 
-        self.title("Account Management  v1.0")
+        self.title("Account Management  v1.1")
         self.resizable(False, False)
         # customtkinter.set_appearance_mode("dark")
 
@@ -222,6 +223,14 @@ class App(customtkinter.CTk, PowerShellCommand):
     def add_users_to_a_group(self):
         """A button to add users to the selected group"""
 
+        def add_users_in_thread(group, received_user):
+            """Starts a thread to add a user to a group"""
+
+            result_add_users = self.add_domain_users(group, received_user)
+
+            self.textbox.insert(customtkinter.END, f"{result_add_users}\n\n")
+            self.textbox.see(customtkinter.END)
+
         if self.group and self.users:
             find_group = self.find_group_domain(self.group)
 
@@ -230,11 +239,9 @@ class App(customtkinter.CTk, PowerShellCommand):
                                                        f"***"f"\n\n")
                 self.textbox.see(customtkinter.END)
 
+                # Adding users to a selected group in multithreaded mode
                 for user in self.users:
-                    result_add_users = self.add_domain_users(self.group, user)
-
-                    self.textbox.insert(customtkinter.END, f"{result_add_users}\n\n")
-                    self.textbox.see(customtkinter.END)
+                    Thread(target=add_users_in_thread, args=(self.group, user)).start()
 
                 self.textbox.insert(customtkinter.END, "\n")
                 self.textbox.see(customtkinter.END)
@@ -250,6 +257,14 @@ class App(customtkinter.CTk, PowerShellCommand):
     def remove_users_from_a_group(self):
         """A button to remove users from the selected group"""
 
+        def remove_users_in_thread(group, received_user):
+            """Starts a thread to remove a user from a group"""
+
+            result_remove_users = self.remove_domain_users(group, received_user)
+
+            self.textbox.insert(customtkinter.END, f"{result_remove_users}\n\n")
+            self.textbox.see(customtkinter.END)
+
         if self.group and self.users:
             find_group = self.find_group_domain(self.group)
 
@@ -258,11 +273,9 @@ class App(customtkinter.CTk, PowerShellCommand):
                                                        f"  ***\n\n")
                 self.textbox.see(customtkinter.END)
 
+                # Deleting users to a selected group in multithreaded mode
                 for user in self.users:
-                    result_add_users = self.remove_domain_users(self.group, user)
-
-                    self.textbox.insert(customtkinter.END, f"{result_add_users}\n\n")
-                    self.textbox.see(customtkinter.END)
+                    Thread(target=remove_users_in_thread, args=(self.group, user)).start()
 
                 self.textbox.insert(customtkinter.END, "\n")
                 self.textbox.see(customtkinter.END)
