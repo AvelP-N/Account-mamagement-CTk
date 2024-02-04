@@ -162,12 +162,10 @@ class App(customtkinter.CTk, PowerShellCommand):
             self.entry_group.delete(0, customtkinter.END)
             self.label_custom_text.configure(text=group[:32], text_color="green", font=("Times New Roman", 16, "bold"))
 
-            self.textbox.insert(customtkinter.END, f"***  The group has been added  ***\n{group}\n\n\n")
-            self.textbox.see(customtkinter.END)
+            self.write_text(f"***  The group has been added  ***\n{group}\n\n\n")
 
         else:
-            self.textbox.insert(customtkinter.END, "Enter a group in the input field!\n\n")
-            self.textbox.see(customtkinter.END)
+            self.write_text("Enter a group in the input field!\n\n")
 
     def delete_group(self):
         """A button to remove a group from a variable"""
@@ -175,12 +173,11 @@ class App(customtkinter.CTk, PowerShellCommand):
         if self.group:
             self.label_custom_text.configure(text="")
 
-            self.textbox.insert(customtkinter.END, f"***  The group has been deleted  ***\n{self.group}\n\n\n")
-            self.textbox.see(customtkinter.END)
+            self.write_text(f"***  The group has been deleted  ***\n{self.group}\n\n\n")
+
             self.group = None
         else:
-            self.textbox.insert(customtkinter.END, "There is no added group!\n\n")
-            self.textbox.see(customtkinter.END)
+            self.write_text("There is no added group!\n\n")
 
     def add_users(self, users):
         """A button to add users to the list"""
@@ -193,32 +190,27 @@ class App(customtkinter.CTk, PowerShellCommand):
             if listing_users:
                 self.users.extend(listing_users)
 
-                self.textbox.insert(customtkinter.END, "***  Users have been added to the list  ***\n")
+                self.write_text("***  Users have been added to the list  ***\n")
 
                 for user in self.users:
-                    self.textbox.insert(customtkinter.END, f"{user}\n")
+                    self.write_text(f"{user}\n")
 
-                self.textbox.insert(customtkinter.END, "\n\n")
-                self.textbox.see(customtkinter.END)
+                self.write_text("\n\n")
 
             else:
-                self.textbox.insert(customtkinter.END, "No users found!\n\n")
-                self.textbox.see(customtkinter.END)
+                self.write_text("No users found!\n\n")
 
         else:
-            self.textbox.insert(customtkinter.END, "No users found!\n\n")
-            self.textbox.see(customtkinter.END)
+            self.write_text("No users found!\n\n")
 
     def delete_users(self):
         """A button to remove users from the list"""
 
         if self.users:
             self.users = []
-            self.textbox.insert(customtkinter.END, "***  The list of users has been deleted  ***\n\n")
-            self.textbox.see(customtkinter.END)
+            self.write_text("***  The list of users has been deleted  ***\n\n")
         else:
-            self.textbox.insert(customtkinter.END, "The list of users is empty!\n\n")
-            self.textbox.see(customtkinter.END)
+            self.write_text("The list of users is empty!\n\n")
 
     def add_users_to_a_group(self):
         """A button to add users to the selected group"""
@@ -228,31 +220,25 @@ class App(customtkinter.CTk, PowerShellCommand):
 
             result_add_users = self.add_domain_users(group, received_user)
 
-            self.textbox.insert(customtkinter.END, f"{result_add_users}\n\n")
-            self.textbox.see(customtkinter.END)
+            self.write_text(f"{result_add_users}\n\n")
 
         if self.group and self.users:
             find_group = self.find_group_domain(self.group)
 
             if find_group in "A group has been found in the domain":
-                self.textbox.insert(customtkinter.END, f"***  Users will be added to the group < {self.group} >  "
-                                                       f"***"f"\n\n")
-                self.textbox.see(customtkinter.END)
+                self.write_text(f"***  Users will be added to the group < {self.group} >  ***\n\n")
 
                 # Adding users to a selected group in multithreaded mode
                 for user in self.users:
                     Thread(target=add_users_in_thread, args=(self.group, user)).start()
 
-                self.textbox.insert(customtkinter.END, "\n")
-                self.textbox.see(customtkinter.END)
+                self.write_text("\n")
 
             else:
-                self.textbox.insert(customtkinter.END, f"{find_group}\n\n")
-                self.textbox.see(customtkinter.END)
+                self.write_text(f"{find_group}\n\n")
 
         else:
-            self.textbox.insert(customtkinter.END, "Add a group and users!\n\n")
-            self.textbox.see(customtkinter.END)
+            self.write_text("Add a group and users!\n\n")
 
     def remove_users_from_a_group(self):
         """A button to remove users from the selected group"""
@@ -262,31 +248,29 @@ class App(customtkinter.CTk, PowerShellCommand):
 
             result_remove_users = self.remove_domain_users(group, received_user)
 
-            self.textbox.insert(customtkinter.END, f"{result_remove_users}\n\n")
-            self.textbox.see(customtkinter.END)
+            self.write_text(f"{result_remove_users}\n\n")
 
         if self.group and self.users:
             find_group = self.find_group_domain(self.group)
 
             if find_group in "A group has been found in the domain":
-                self.textbox.insert(customtkinter.END, f"***  Users will be removed from the group < {self.group} >"
-                                                       f"  ***\n\n")
-                self.textbox.see(customtkinter.END)
+                self.write_text(f"***  Users will be removed from the group < {self.group} >  ***\n\n")
 
                 # Deleting users to a selected group in multithreaded mode
                 for user in self.users:
                     Thread(target=remove_users_in_thread, args=(self.group, user)).start()
 
-                self.textbox.insert(customtkinter.END, "\n")
-                self.textbox.see(customtkinter.END)
+                self.write_text("\n")
 
             else:
-                self.textbox.insert(customtkinter.END, f"{find_group}\n\n")
-                self.textbox.see(customtkinter.END)
+                self.write_text(f"{find_group}\n\n")
 
         else:
-            self.textbox.insert(customtkinter.END, "Add a group and users!\n\n")
-            self.textbox.see(customtkinter.END)
+            self.write_text("Add a group and users!\n\n")
+
+    def write_text(self, text):
+        self.textbox.insert(customtkinter.END, text)
+        self.textbox.see(customtkinter.END)
 
 
 if __name__ == '__main__':
