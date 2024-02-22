@@ -254,7 +254,7 @@ class App(customtkinter.CTk, PowerShellCommand):
         """The button for adding a group to a variable"""
 
         if data:
-            group = re.findall(r"[^@ ]{2,}", data)
+            group = re.findall(r"[^@]{2,}", data)
 
             if group:
                 self.group = str(group[0]).strip()
