@@ -95,7 +95,7 @@ class App(customtkinter.CTk, PowerShellCommand):
         self.textbox = customtkinter.CTkTextbox(self, activate_scrollbars=True, width=400, text_color="green")
         self.textbox.grid(row=1, column=1, padx=(0, 10), pady=(27, 8), sticky="nsew")
 
-        # *** The main frame in the "Add Users" tab ***
+        # *** The main frame in the "Adding users to a group" tab ***
         self.main_frame_tab1 = customtkinter.CTkFrame(self.tabview.tab("Adding users to a group"))
         self.main_frame_tab1.grid(row=0, column=0)
 
@@ -167,7 +167,7 @@ class App(customtkinter.CTk, PowerShellCommand):
                                                          command=self.remove_users_from_a_group)
         self.button_dell_users.grid(row=1, column=1, padx=10, pady=10)
 
-        # *** The main frame in the "Add Groups" tab ***
+        # *** The main frame in the "Adding groups to a user" tab ***
         self.main_frame_tab2 = customtkinter.CTkFrame(self.tabview.tab("Adding groups to a user"))
         self.main_frame_tab2.grid(row=0, column=0)
 
@@ -318,7 +318,12 @@ class App(customtkinter.CTk, PowerShellCommand):
         input_data = re.sub(pattern_ntfs, "", input_data)
 
         # Search for rds groups
-        rds_groups = ("Some groups")
+        rds_groups = ("RDP OC", "RDS 1C BitFinance Test", "RDS 1C BitFinance", "RDS 1C BP Test", "RDS 1C BP NSI",
+                      "RDS 1C BP", "RDS 1C Empty Client", "RDS 1C Empty Client", "RDS 1C istrlogistika",
+                      "RDS 1C Itilium", "RDS 1C UT NSI", "RDS 1C UT", "RDS 1C ZUP Test 2", "RDS 1C ZUP Test 1",
+                      "RDS 1C ZUP NSI", "RDS 1C ZUP", "RDS Collection Croc", "RDS Collection Enisey",
+                      "RDS Collection Test Enisey", "RDS Consultant Plus", "RDS LabCenter", "RDS Molis", "RDS Sorting",
+                      "RDS Sysmex", "RDS Unity Alert", "RDS Unity Realtime", "WIFI Computers", "WIFI Users")
 
         list_groups_rds = [group for group in rds_groups if group in input_data]
         found_data.extend(list_groups_rds)
@@ -537,3 +542,5 @@ class App(customtkinter.CTk, PowerShellCommand):
 if __name__ == '__main__':
     app = App()
     app.mainloop()
+
+
