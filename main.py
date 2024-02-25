@@ -37,8 +37,8 @@ class PowerShellCommand:
             return result_command.stderr.splitlines()[0]
 
     @staticmethod
-    def add_domain_users(ad_group: str, ad_user: str) -> str:
-        """Add users to a group with the PowerShell command"""
+    def add_domain_user(ad_group: str, ad_user: str) -> str:
+        """Add user to a group with the PowerShell command"""
 
         command = f"""Add-ADGroupMember -Identity "{ad_group}" -Members "{ad_user}" -Confirm:$false"""
 
@@ -51,8 +51,8 @@ class PowerShellCommand:
             return result_command.stderr.splitlines()[0]
 
     @staticmethod
-    def remove_domain_users(ad_group: str, ad_user: str) -> str:
-        """Deleting users from a group with the PowerShell command"""
+    def remove_domain_user(ad_group: str, ad_user: str) -> str:
+        """Deleting user from a group with the PowerShell command"""
 
         command = f"""Remove-ADGroupMember -Identity "{ad_group}" -Members "{ad_user}" -Confirm:$false"""
 
@@ -171,7 +171,7 @@ class App(customtkinter.CTk, PowerShellCommand):
         self.main_frame_tab2 = customtkinter.CTkFrame(self.tabview.tab("Adding groups to a user"))
         self.main_frame_tab2.grid(row=0, column=0)
 
-        # A frame for adding a group
+        # A frame for adding a user
         self.frame_add_user = customtkinter.CTkFrame(self.main_frame_tab2)
         self.frame_add_user.grid(row=0, column=0, pady=(0, 10), sticky="nsew")
 
@@ -312,24 +312,25 @@ class App(customtkinter.CTk, PowerShellCommand):
         # Search for ntfs groups
         pattern_find_ntfs_groups = re.compile(r"(?i)(?:croc-|msk-|perm-|QVSRV_).+?(?:_ro|_rw)\b")
         list_groups_ntfs = pattern_find_ntfs_groups.findall(input_data)
-        found_data.extend(list_groups_ntfs)
 
-        pattern_ntfs = r"|".join(list_groups_ntfs)
-        input_data = re.sub(pattern_ntfs, "", input_data)
+        if list_groups_ntfs:
+            found_data.extend(list_groups_ntfs)
+
+            pattern_ntfs = r"|".join(list_groups_ntfs)
+            input_data = re.sub(pattern_ntfs, "", input_data)
 
         # Search for rds groups
-        rds_groups = ("RDP OC", "RDS 1C BitFinance Test", "RDS 1C BitFinance", "RDS 1C BP Test", "RDS 1C BP NSI",
-                      "RDS 1C BP", "RDS 1C Empty Client", "RDS 1C Empty Client", "RDS 1C istrlogistika",
-                      "RDS 1C Itilium", "RDS 1C UT NSI", "RDS 1C UT", "RDS 1C ZUP Test 2", "RDS 1C ZUP Test 1",
-                      "RDS 1C ZUP NSI", "RDS 1C ZUP", "RDS Collection Croc", "RDS Collection Enisey",
-                      "RDS Collection Test Enisey", "RDS Consultant Plus", "RDS LabCenter", "RDS Molis", "RDS Sorting",
-                      "RDS Sysmex", "RDS Unity Alert", "RDS Unity Realtime", "WIFI Computers", "WIFI Users")
+        rds_groups = ("some groups")
 
         list_groups_rds = [group for group in rds_groups if group in input_data]
-        found_data.extend(list_groups_rds)
 
-        pattern_rds = r"|".join(list_groups_rds) + "|KDL|OC"
-        input_data = re.sub(pattern_rds, "", input_data)
+        if list_groups_rds:
+            found_data.extend(list_groups_rds)
+
+            pattern_rds = r"|".join(list_groups_rds)
+            input_data = re.sub(pattern_rds, "", input_data)
+
+        input_data = re.sub(r"KDL|OC|IT|SSL|KIPS|Taxcom", "", input_data)
 
         # Search for other groups or users
         pattern_find_rest_groups_or_users = re.compile(r"(?ai)(\w{2,}(?:[.-]\w+)*)(?:@[a-z]+\.[a-z]+)?")
@@ -342,7 +343,7 @@ class App(customtkinter.CTk, PowerShellCommand):
         """A button to remove users from the list"""
 
         if self.list_users:
-            self.list_users = []
+            self.list_users.clear()
             self.write_text("***  The list of users has been deleted  ***\n\n")
 
         else:
@@ -351,10 +352,10 @@ class App(customtkinter.CTk, PowerShellCommand):
     def add_users_to_a_group(self) -> None:
         """A button to add users to the selected group"""
 
-        def add_users_in_thread(received_user: str) -> None:
+        def add_user_in_thread(received_user: str) -> None:
             """Starts a thread to add a user to a group"""
 
-            result_add_user = self.add_domain_users(self.group, received_user)
+            result_add_user = self.add_domain_user(self.group, received_user)
 
             self.write_text(f"{result_add_user}\n\n")
 
@@ -362,13 +363,11 @@ class App(customtkinter.CTk, PowerShellCommand):
             find_group = self.find_group_domain(self.group)
 
             if find_group in "A group has been found in the domain":
-                self.write_text(f"***  Users will be added to the group < {self.group} >  ***\n\n")
+                self.write_text("\n***  Adding a list of users to a group  ***\n\n")
 
                 # Adding users to a selected group in multithreaded mode
                 for user in self.list_users:
-                    Thread(target=add_users_in_thread, args=(user,)).start()
-
-                self.write_text("\n")
+                    Thread(target=add_user_in_thread, args=(user,)).start()
 
             else:
                 self.write_text(f"{find_group}\n\n")
@@ -379,10 +378,10 @@ class App(customtkinter.CTk, PowerShellCommand):
     def remove_users_from_a_group(self) -> None:
         """A button to remove users from the selected group"""
 
-        def remove_users_in_thread(received_user: str) -> None:
+        def remove_user_in_thread(received_user: str) -> None:
             """Starts a thread to remove a user from a group"""
 
-            result_remove_user = self.remove_domain_users(self.group, received_user)
+            result_remove_user = self.remove_domain_user(self.group, received_user)
 
             self.write_text(f"{result_remove_user}\n\n")
 
@@ -390,13 +389,11 @@ class App(customtkinter.CTk, PowerShellCommand):
             find_group = self.find_group_domain(self.group)
 
             if find_group in "A group has been found in the domain":
-                self.write_text(f"***  Users will be removed from the group < {self.group} >  ***\n\n")
+                self.write_text("\n***  Deleting a list of users from a group  ***\n\n")
 
                 # Deleting users to a selected group in multithreaded mode
                 for user in self.list_users:
-                    Thread(target=remove_users_in_thread, args=(user,)).start()
-
-                self.write_text("\n")
+                    Thread(target=remove_user_in_thread, args=(user,)).start()
 
             else:
                 self.write_text(f"{find_group}\n\n")
@@ -420,23 +417,24 @@ class App(customtkinter.CTk, PowerShellCommand):
         """The button for adding a user to a variable"""
 
         if data:
-            user = re.findall(r"[^@ ]{2,}", data)
+            user = re.findall(r"[^@ А-ЯЁа-яё]{2,}", data)
 
             if user:
-                self.user = str(user[0]).strip()
+                self.user = str(user[0])
                 self.entry_user.delete(0, customtkinter.END)
                 self.label_text_user.configure(text=self.user[:32], text_color="green",
                                                font=("Times New Roman", 16, "bold"))
                 self.write_text(f"***  The user has been added  ***\n{self.user}\n\n\n")
 
             else:
+                self.entry_user.delete(0, customtkinter.END)
                 self.write_text("The user was not found!\n\n")
 
         else:
             self.write_text("Enter a user in the input field!\n\n")
 
     def delete_user(self) -> None:
-        """A button to remove a group from a variable"""
+        """A button to remove a user from a variable"""
 
         if self.user:
             self.label_text_user.configure(text="")
@@ -472,7 +470,7 @@ class App(customtkinter.CTk, PowerShellCommand):
         """A button to remove groups from the list"""
 
         if self.list_groups:
-            self.list_groups = []
+            self.list_groups.clear()
             self.write_text("***  The list of groups has been deleted  ***\n\n")
 
         else:
@@ -481,10 +479,10 @@ class App(customtkinter.CTk, PowerShellCommand):
     def add_groups_to_a_user(self) -> None:
         """A button to add a user to the list of groups"""
 
-        def add_groups_in_thread(received_group: str) -> None:
+        def add_group_in_thread(received_group: str) -> None:
             """starts a thread to add a group to the user"""
 
-            result_add_group = self.add_domain_users(received_group, self.user)
+            result_add_group = self.add_domain_user(received_group, self.user)
 
             self.write_text(f"{result_add_group}\n\n")
 
@@ -492,13 +490,11 @@ class App(customtkinter.CTk, PowerShellCommand):
             find_user = self.find_user_domain(self.user)
 
             if find_user in "The user has been found in the domain":
-                self.write_text(f"***  The groups will be added to the user < {self.user} >  ***\n\n")
+                self.write_text("\n***  Adding a user to the list of groups  ***\n\n")
 
                 # Adding groups to a user in multithreaded mode
                 for group in self.list_groups:
-                    Thread(target=add_groups_in_thread, args=(group,)).start()
-
-                self.write_text("\n")
+                    Thread(target=add_group_in_thread, args=(group,)).start()
 
             else:
                 self.write_text(f"{find_user}\n\n")
@@ -509,10 +505,10 @@ class App(customtkinter.CTk, PowerShellCommand):
     def remove_a_user_from_groups(self) -> None:
         """A button to remove a user from the list of groups"""
 
-        def remove_groups_in_thread(received_group: str) -> None:
+        def remove_group_in_thread(received_group: str) -> None:
             """Starts a thread to delete a group from a user"""
 
-            result_remove_user = self.remove_domain_users(received_group, self.user)
+            result_remove_user = self.remove_domain_user(received_group, self.user)
 
             self.write_text(f"{result_remove_user}\n\n")
 
@@ -520,13 +516,11 @@ class App(customtkinter.CTk, PowerShellCommand):
             find_user = self.find_user_domain(self.user)
 
             if find_user in "The user has been found in the domain":
-                self.write_text(f"***  The user < {self.user} > will be removed from the groups  ***\n\n")
+                self.write_text(f"\n***  Removing a user from the list of groups  ***\n\n")
 
                 # Deleting groups from a user in multithreaded mode
                 for group in self.list_groups:
-                    Thread(target=remove_groups_in_thread, args=(group,)).start()
-
-                self.write_text("\n")
+                    Thread(target=remove_group_in_thread, args=(group,)).start()
 
             else:
                 self.write_text(f"{find_user}\n\n")
