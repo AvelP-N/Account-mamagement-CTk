@@ -1,6 +1,7 @@
 import re
 import subprocess
 import tkinter as tk
+from time import sleep
 from threading import Thread
 import customtkinter
 
@@ -77,7 +78,7 @@ class App(customtkinter.CTk, PowerShellCommand):
         self.list_groups = []
 
         # *** Setup main interface ***
-        self.title("Account Management  v1.3")
+        self.title("Account Management  v1.4")
         self.resizable(False, False)
         # customtkinter.set_appearance_mode("dark")
 
@@ -320,7 +321,12 @@ class App(customtkinter.CTk, PowerShellCommand):
             input_data = re.sub(pattern_ntfs, "", input_data)
 
         # Search for rds groups
-        rds_groups = ("some groups")
+        rds_groups = ("RDP OC", "RDS 1C BitFinance Test", "RDS 1C BitFinance", "RDS 1C BP Test", "RDS 1C BP NSI",
+                      "RDS 1C BP", "RDS 1C Empty Client", "RDS 1C Empty Client", "RDS 1C istrlogistika",
+                      "RDS 1C Itilium", "RDS 1C UT NSI", "RDS 1C UT", "RDS 1C ZUP Test 2", "RDS 1C ZUP Test 1",
+                      "RDS 1C ZUP NSI", "RDS 1C ZUP", "RDS Collection Croc", "RDS Collection Enisey",
+                      "RDS Collection Test Enisey", "RDS Consultant Plus", "RDS LabCenter", "RDS Molis", "RDS Sorting",
+                      "RDS Sysmex", "RDS Unity Alert", "RDS Unity Realtime", "WIFI Computers", "WIFI Users")
 
         list_groups_rds = [group for group in rds_groups if group in input_data]
 
@@ -368,6 +374,7 @@ class App(customtkinter.CTk, PowerShellCommand):
                 # Adding users to a selected group in multithreaded mode
                 for user in self.list_users:
                     Thread(target=add_user_in_thread, args=(user,)).start()
+                    sleep(0.1)
 
             else:
                 self.write_text(f"{find_group}\n\n")
@@ -394,6 +401,7 @@ class App(customtkinter.CTk, PowerShellCommand):
                 # Deleting users to a selected group in multithreaded mode
                 for user in self.list_users:
                     Thread(target=remove_user_in_thread, args=(user,)).start()
+                    sleep(0.1)
 
             else:
                 self.write_text(f"{find_group}\n\n")
@@ -495,6 +503,7 @@ class App(customtkinter.CTk, PowerShellCommand):
                 # Adding groups to a user in multithreaded mode
                 for group in self.list_groups:
                     Thread(target=add_group_in_thread, args=(group,)).start()
+                    sleep(0.1)
 
             else:
                 self.write_text(f"{find_user}\n\n")
@@ -521,6 +530,7 @@ class App(customtkinter.CTk, PowerShellCommand):
                 # Deleting groups from a user in multithreaded mode
                 for group in self.list_groups:
                     Thread(target=remove_group_in_thread, args=(group,)).start()
+                    sleep(0.1)
 
             else:
                 self.write_text(f"{find_user}\n\n")
