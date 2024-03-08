@@ -1,6 +1,6 @@
 # Account-mamagement-CTk
 
-![Screenshot_1](https://github.com/AvelP-N/Account-management-CTk/assets/124772244/72c1edcb-184c-4d45-b847-d47b0f12a906)
+![Screenshot_1](https://github.com/AvelP-N/Account-management-CTk/assets/124772244/ac558576-b41c-49ca-989e-00ab63f1b6c3)
 
 Эта программа на Python, которая предоставляет графический интерфейс пользователя (GUI) для управления группами и пользователями Active Directory (AD) с использованием команд PowerShell. Она использует библиотеку customtkinter для GUI и модуль subprocess для выполнения команд PowerShell. Программа позволяет пользователям находить, добавлять и удалять группы AD, а также добавлять и удалять пользователей из этих групп. Она также предоставляет обратную связь о выполненных действиях через текстовый интерфейс внутри GUI.
 Класс PowerShellCommand содержит методы для поиска группы или пользователя в домене, добавления пользователей в группу и удаления пользователей из группы с использованием команд PowerShell. Класс App, который наследует от customtkinter.CTk и PowerShellCommand, отвечает за отображение GUI и интеграцию функциональности класса PowerShellCommand в приложение.
