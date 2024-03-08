@@ -321,12 +321,7 @@ class App(customtkinter.CTk, PowerShellCommand):
             input_data = re.sub(pattern_ntfs, "", input_data)
 
         # Search for rds groups
-        rds_groups = ("RDP OC", "RDS 1C BitFinance Test", "RDS 1C BitFinance", "RDS 1C BP Test", "RDS 1C BP NSI",
-                      "RDS 1C BP", "RDS 1C Empty Client", "RDS 1C Empty Client", "RDS 1C istrlogistika",
-                      "RDS 1C Itilium", "RDS 1C UT NSI", "RDS 1C UT", "RDS 1C ZUP Test 2", "RDS 1C ZUP Test 1",
-                      "RDS 1C ZUP NSI", "RDS 1C ZUP", "RDS Collection Croc", "RDS Collection Enisey",
-                      "RDS Collection Test Enisey", "RDS Consultant Plus", "RDS LabCenter", "RDS Molis", "RDS Sorting",
-                      "RDS Sysmex", "RDS Unity Alert", "RDS Unity Realtime", "WIFI Computers", "WIFI Users")
+        rds_groups = ("groups")
 
         list_groups_rds = [group for group in rds_groups if group in input_data]
 
